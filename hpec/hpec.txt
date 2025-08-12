@@ -1,0 +1,67 @@
+***install
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y curl wget lsb-release gnupg
+sudo apt install -y podman
+curl --silent --remote-name --location https://download.ceph.com/rpm-19.2.0/el9/noarch/cephadm
+chmod +x cephadm
+sudo mv cephadm /usr/local/bin/
+cephadm version
+sudo cephadm add-repo --release squid
+sudo cephadm install
+sudo apt install -y ceph cephadm ceph-common ceph-fuse ceph-mgr ceph-mon ceph-osd
+sudo cephadm bootstrap --mon-ip 127.0.0.1 --skip-mon-network 
+
+---------if needed-----------
+sudo mkdir -p /etc/containers
+sudo tee /etc/containers/policy.json > /dev/null <<EOF
+{
+  "default": [
+    {
+      "type": "insecureAcceptAnything"
+    }
+  ]
+}
+EOF
+----------------------------
+***install squid
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y curl wget lsb-release gnupg
+sudo apt install -y podman
+curl --silent --remote-name --location https://download.ceph.com/rpm-19.2.0/el9/noarch/cephadm
+chmod +x cephadm
+sudo mv cephadm /usr/local/bin/
+cephadm version
+sudo cephadm add-repo --release squid
+sudo cephadm install
+sudo cephadm bootstrap --mon-ip 127.0.0.1 --skip-mon-network 
+
+---------if needed-----------
+sudo mkdir -p /etc/containers
+sudo tee /etc/containers/policy.json > /dev/null <<EOF
+{
+  "default": [
+    {
+      "type": "insecureAcceptAnything"
+    }
+  ]
+}
+EOF
+----------------------------
+
+
+
+
+
+***add osd
+lsblk
+sudo wipefs -a /dev/<partition>
+sudo lvs
+sudo ceph-volume lvm prepare --data /dev/<partition>
+
+
+
+
+
+
+***delete install
+sudo find / -name "*ceph*" -exec rm -rf {} \; 2>/dev/null
