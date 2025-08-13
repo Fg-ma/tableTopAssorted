@@ -1,8 +1,7 @@
-***install
+# Main node
 sudo apt update && sudo apt upgrade -y
 sudo apt install -y curl wget lsb-release gnupg
-sudo apt install -y podman
-curl --silent --remote-name --location https://download.ceph.com/rpm-19.2.0/el9/noarch/cephadm
+curl --silent --remote-name --location https://download.ceph.com/rpm-19.2.2/el9/noarch/cephadm
 chmod +x cephadm
 sudo mv cephadm /usr/local/bin/
 cephadm version
@@ -11,23 +10,58 @@ sudo cephadm install
 sudo apt install -y ceph cephadm ceph-common ceph-fuse ceph-mgr ceph-mon ceph-osd
 sudo cephadm bootstrap --mon-ip 127.0.0.1 --skip-mon-network 
 
----------if needed-----------
-sudo mkdir -p /etc/containers
-sudo tee /etc/containers/policy.json > /dev/null <<EOF
-{
-  "default": [
-    {
-      "type": "insecureAcceptAnything"
-    }
-  ]
-}
-EOF
-----------------------------
-***install squid
+
+# Virtual machine
+su -
+
+apt update
+apt install sudo
+
+sudo visudo
+
+tabletopnode ALL=(ALL:ALL) NOPASSWD: ALL
+
+exit
+
+sudo apt update
+sudo apt install openssh-server
+
+sudo nano /etc/ssh/sshd_config
+PermitRootLogin yes
+PasswordAuthentication yes
+
+sudo systemctl restart ssh
+
+ip link show
+
+sudo nano /etc/network/interfaces
+source /etc/network/interfaces.d/*
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+# Admin
+auto enp1s0
+iface enp1s0 inet static
+	address 10.5.0.10
+	netmask 255.255.0.0
+	gateway 10.5.0.100
+	dns-nameserver 8.8.8.8 8.8.4.4
+
+
+# From main host if not already
+ssh-keygen
+ssh-copy-id tabletopnode@10.5.0.10
+ssh-copy-id root@10.5.0.10
+ssh tabletopnode@10.5.0.10
+
+
+
+
 sudo apt update && sudo apt upgrade -y
 sudo apt install -y curl wget lsb-release gnupg
-sudo apt install -y podman
-curl --silent --remote-name --location https://download.ceph.com/rpm-19.2.0/el9/noarch/cephadm
+curl --silent --remote-name --location https://download.ceph.com/rpm-19.2.2/el9/noarch/cephadm
 chmod +x cephadm
 sudo mv cephadm /usr/local/bin/
 cephadm version
@@ -35,18 +69,7 @@ sudo cephadm add-repo --release squid
 sudo cephadm install
 sudo cephadm bootstrap --mon-ip 127.0.0.1 --skip-mon-network 
 
----------if needed-----------
-sudo mkdir -p /etc/containers
-sudo tee /etc/containers/policy.json > /dev/null <<EOF
-{
-  "default": [
-    {
-      "type": "insecureAcceptAnything"
-    }
-  ]
-}
-EOF
-----------------------------
+
 
 
 

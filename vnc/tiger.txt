@@ -1,33 +1,7 @@
 
-# Working
+# Config
 nano ~/.vnc/xstartup
 chmod +x ~/.vnc/xstartup
-
-#!/bin/sh
-export DISPLAY=:8
-unset SESSION_MANAGER
-unset DBUS_SESSION_BUS_ADDRESS
-
-[ -f "$HOME/.Xresources" ] && xrdb "$HOME/.Xresources"
-
-startxfce4 &
-
-#!/bin/sh
-export DISPLAY=:8
-unset SESSION_MANAGER
-unset DBUS_SESSION_BUS_ADDRESS
-
-export XDG_CURRENT_DESKTOP=XFCE
-export XDG_SESSION_DESKTOP=xfce
-export DESKTOP_SESSION=xfce
-
-pkill -9 -u "$USER" gnome-keyring-daemon
-pkill -9 -u "$USER" xdg-desktop-portal
-pkill -9 -u "$USER" xdg-desktop-portal-gnome
-
-[ -f "$HOME/.Xresources" ] && xrdb "$HOME/.Xresources"
-
-exec startxfce4
 
 #!/bin/sh
 unset SESSION_MANAGER
@@ -40,11 +14,5 @@ unset DBUS_SESSION_BUS_ADDRESS
 exec gnome-session
 
 
-
-
-
-
-
-
-
+# Start up command
 vncserver :8 -localhost yes -xstartup ~/.vnc/xstartup
